@@ -20,13 +20,11 @@ public class Client {
         }
     }
 
-    private static final String HOST = "cp01-qa-bu-09-qa47.cp01.baidu.com";
-
-    private static final Integer PORT = 8806;
-
-    private static final String USERNAME = "pay";
-
-    private static final String PASSWORD = "MiraCle";
+    private static final String HOST = "localhost";
+    private static final Integer PORT = 3306;
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
+    private static final String DB = "JobHunter";
 
     private static final long MAX_PACKET_SIZE = 1024 * 1024 * 16;
 
@@ -116,31 +114,49 @@ public class Client {
 
         int size = 32;
         size += USERNAME.length() + 1;
-        size += getLength(pass);
-        size += "mall_db".length() + 1;
+//        size += getLength(pass);
+        size += 1;
+        size += DB.length() + 1;
         writeUB3(outputStream, size);
 
-        outputStream.write(packageId);
+        outputStream.write(1);
 
         long clientFlag = ClientFlag.getClientFlags();
         writeUB4(outputStream, clientFlag);
         writeUB4(outputStream, MAX_PACKET_SIZE);
 
-        outputStream.write(serverCharsetIndexBytes);
+        outputStream.write(serverCharsetIndexBytes[0]);
         outputStream.write(FILLER);
 
         outputStream.write(USERNAME.getBytes());
         outputStream.write((byte) 0);
 
-        writeWithLength(outputStream, pass);
+//        writeWithLength(outputStream, pass);
+        outputStream.write((byte) 0);
 
-        outputStream.write("mall_db".getBytes());
+        outputStream.write(DB.getBytes());
         outputStream.write((byte) 0);
         outputStream.flush();
 
 
+//        byte[] resBytes = new byte[0];
+        byte[] packageLengthBytes2 = new byte[3];
+        inputStream.read(packageLengthBytes2);
+
+        byte[] packageIdBytes2 = new byte[1];
+        inputStream.read(packageIdBytes2);
+
+        int resByte = inputStream.read();
+        if (resByte == 0x00) {
+            System.out.println("Auth Success");
+        } else if (resByte == 0xff) {
+            System.out.println("Auth Fail");
+        } else {
+            System.out.println("Unknown Error");
+        }
     }
 
+    // figure out why.
     public static final int getLength(byte[] src) {
         int length = src.length;
         if (length < 251) {
