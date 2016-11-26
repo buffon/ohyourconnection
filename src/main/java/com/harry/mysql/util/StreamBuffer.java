@@ -6,7 +6,7 @@ import java.io.OutputStream;
 /**
  * Created by chenyehui on 16/11/25.
  */
-public class Buffer {
+public class StreamBuffer {
 
     public byte[] packageLengthBytes = new byte[3];
 
@@ -48,7 +48,7 @@ public class Buffer {
 
     public byte[] restOfScrambleBuffBytes;
 
-    public Buffer(InputStream inputStream, OutputStream outputStream) {
+    public StreamBuffer(InputStream inputStream, OutputStream outputStream) {
         this.inputStream = inputStream;
         this.outputStream = outputStream;
     }

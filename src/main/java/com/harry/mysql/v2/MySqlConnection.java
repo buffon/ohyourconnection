@@ -1,10 +1,8 @@
 package com.harry.mysql.v2;
 
-import com.harry.mysql.util.Buffer;
+import com.harry.mysql.util.StreamBuffer;
 import com.harry.mysql.util.Constants;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -16,15 +14,15 @@ public class MySqlConnection {
 
         // handshake
         Socket socket = new Socket(Constants.HOST, Constants.PORT);
-        Buffer inputBuffer = new Buffer(socket.getInputStream(), socket.getOutputStream());
-        inputBuffer.analyzeHeader();
-        inputBuffer.analyzeFirstPackage();
+        StreamBuffer inputStreamBuffer = new StreamBuffer(socket.getInputStream(), socket.getOutputStream());
+        inputStreamBuffer.analyzeHeader();
+        inputStreamBuffer.analyzeFirstPackage();
 
         // auth
-        inputBuffer.auth(Constants.USERNAME, Constants.PASSWORD, Constants.DB);
+        inputStreamBuffer.auth(Constants.USERNAME, Constants.PASSWORD, Constants.DB);
 
         // check auth res
-        inputBuffer.analyzeHeader();
-        inputBuffer.checkAuth();
+        inputStreamBuffer.analyzeHeader();
+        inputStreamBuffer.checkAuth();
     }
 }
