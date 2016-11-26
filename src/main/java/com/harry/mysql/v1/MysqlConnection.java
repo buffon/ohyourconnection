@@ -1,4 +1,4 @@
-package com.harry.mysql;
+package com.harry.mysql.v1;
 
 import com.harry.mysql.util.ClientFlag;
 import com.harry.mysql.util.SecurityUtil;
@@ -10,7 +10,8 @@ import java.net.Socket;
 /**
  * @author chenyehui
  */
-public class Client {
+@Deprecated
+public class MysqlConnection {
 
     static class Position {
         Integer position;
@@ -38,6 +39,7 @@ public class Client {
         InputStream inputStream = socket.getInputStream();
         byte[] packageLengthBytes = new byte[3];
         inputStream.read(packageLengthBytes);
+
 
         byte[] packageIdBytes = new byte[1];
         inputStream.read(packageIdBytes);
@@ -137,6 +139,7 @@ public class Client {
         outputStream.write(DB.getBytes());
         outputStream.write((byte) 0);
         outputStream.flush();
+        System.out.println("Send Username and Password for Auth");
 
 
 //        byte[] resBytes = new byte[0];
