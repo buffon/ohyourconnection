@@ -63,7 +63,7 @@ public class StreamBuffer {
         body = bodyBytes;
     }
 
-    public void analyzeFirstPackage() throws Exception {
+    public void retrieveFirstPackage() throws Exception {
         protocolVersion = body[position++];
         serverVersion = readBytesWithNull();
         threadId = readUB4();
@@ -101,9 +101,7 @@ public class StreamBuffer {
         }
         size += db.length() + 1;
         writeUB3(size);
-
         writeByte((byte) 1);
-
         writeUB4(ClientFlag.getClientFlags());
         writeUB4(Constants.MAX_PACKET_SIZE);
 
@@ -134,6 +132,34 @@ public class StreamBuffer {
             return 4 + length;
         } else {
             return 9 + length;
+        }
+    }
+
+    public void writeShowDatabases() throws Exception {
+        byte[] arg = "show databases;".getBytes();
+        // length : command + sql
+        writeUB3(1 + arg.length);
+        // packageId
+        writeByte((byte) 1);
+        // query command
+        writeByte((byte) 3);
+        // sql
+        writeBytes(arg);
+
+        outputStream.flush();
+    }
+
+    // TODO handle mysql query command resultset
+    public void retrieveShowDatabases() {
+        byte res = body[0];
+        if (res == 0x00) {
+            System.out.println("show databases success");
+        } else if (res == 0xff) {
+            System.out.println("show databases fail");
+        } else if (res == 0xfe) {
+            System.out.println("show databases EOF");
+        } else {
+
         }
     }
 
@@ -265,6 +291,8 @@ public class StreamBuffer {
 
     public boolean checkAuth() {
         int res = readByte();
+
+        position = 0;
 
         if (res == 0x00) {
             System.out.println("[AUTH RESULT] Success");

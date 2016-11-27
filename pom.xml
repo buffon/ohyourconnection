@@ -15,10 +15,21 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
-      <version>4.0.24.Final</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>io.netty</groupId>-->
+      <!--<artifactId>netty-all</artifactId>-->
+      <!--<version>4.0.24.Final</version>-->
+    <!--</dependency>-->
+      <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-all</artifactId>
+          <version>5.0.0.Alpha2</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>log4j</groupId>
+                  <artifactId>log4j</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
   </dependencies>
 </project>

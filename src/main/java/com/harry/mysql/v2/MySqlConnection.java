@@ -16,7 +16,7 @@ public class MySqlConnection {
         Socket socket = new Socket(Constants.HOST, Constants.PORT);
         StreamBuffer inputStreamBuffer = new StreamBuffer(socket.getInputStream(), socket.getOutputStream());
         inputStreamBuffer.analyzeHeader();
-        inputStreamBuffer.analyzeFirstPackage();
+        inputStreamBuffer.retrieveFirstPackage();
 
         // auth
         inputStreamBuffer.auth(Constants.USERNAME, Constants.PASSWORD, Constants.DB);
@@ -24,5 +24,12 @@ public class MySqlConnection {
         // check auth res
         inputStreamBuffer.analyzeHeader();
         inputStreamBuffer.checkAuth();
+
+        // send command
+        inputStreamBuffer.writeShowDatabases();
+
+        inputStreamBuffer.analyzeHeader();
+        inputStreamBuffer.retrieveShowDatabases();
+
     }
 }
